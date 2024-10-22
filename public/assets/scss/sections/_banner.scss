@@ -344,7 +344,7 @@
 
         h1 {
             font-family: $soligant;
-            font-size: 110px;
+            font-size: 100px;
             margin-bottom: 50px;
 
             @include xxl {
@@ -388,6 +388,8 @@
 
         span {
             background-color: $black;
+            border-radius: 0;
+           
         }
     }
 
@@ -526,7 +528,7 @@
         .fz-banner-rounded-sticker {
             position: absolute;
             left: calc(0% - 150px);
-            bottom: calc(181px + 55px);
+            bottom: calc(150px + 55px);
 
             @include xl {
                 left: calc(0% - 90px);
@@ -1861,7 +1863,7 @@
         }
 
         span {
-            background-color: #18223A;
+            background-color: #145759;
         }
     }
 
@@ -2878,6 +2880,8 @@
 
         span {
             background-color: #000;
+       
+
         }
     }
 

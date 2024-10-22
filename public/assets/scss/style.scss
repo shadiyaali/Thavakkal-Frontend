@@ -121,7 +121,7 @@ TABLE OF CONTENTS:
 }
 
 .fz-2-single-product:hover {  
-    border: 1px solid #afb5b5;
+    border: 1px solid #ae774c;
     transition: all .5s ease;
 }
 
@@ -186,6 +186,28 @@ TABLE OF CONTENTS:
 .fz-2-section-heading {
     margin-bottom: 30px;
 }
+
+.fz-special-offer-btn {
+    background: #10494a;
+    border-radius: 6px;
+}
+.fz-special-offer-bg {  
+    border-radius: 12px;
+}
+
+.fz-def-btn span {  
+    -webkit-transform: translate(-0%, -50%);
+    transform: translate(-0%, -50%);
+}
+
+.fz-2-banner-section .fz-def-btn span {
+    background-color: #155759;
+    border-radius: 0;
+}
+
+
+
+
 
 @media (max-width: 991px){
     .header-nav-container {

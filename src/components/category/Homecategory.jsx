@@ -85,7 +85,7 @@ const MasterCategory = ({ img, title, desc, link }) => {
 
 const Category = () => {
   return (
-    <section className="bg-gry-1">
+    <section className="bg-gry-1 p-top-20">
     <Fragment>
       <Container>
         <section className="section-b-space border-section border-top-0">

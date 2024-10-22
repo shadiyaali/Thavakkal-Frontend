@@ -138,6 +138,7 @@
             opacity: 0;
             pointer-events: none;
             box-shadow: 2px 2px #c1c1c1;
+            border-radius: 6px;
 
             @include lg {
                 padding: 10px 25px;
@@ -153,8 +154,16 @@
 
             &:hover {
                 color: $white;
-                background: $black;
+                background: #155759;
             }
+        }
+
+        button.fz-add-to-wishlist {
+
+            &:hover {
+                color: $white;
+                background: #ae774c !important;
+            } 
         }
 
         button.fz-add-to-wishlist {

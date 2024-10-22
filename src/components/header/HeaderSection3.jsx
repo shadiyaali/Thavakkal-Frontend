@@ -28,7 +28,7 @@ const HeaderSection3 = () => {
       <div className="row m-0 align-items-center">
         <div className="col-lg-4 col-md-6 col-9">
           <div className="fz-header-left-content d-flex align-items-center">
-            <div className="fz-logo-container">
+            <div className="fz-logo-container logo-top">
               <Link to="/">
                 <img
                   src="assets/images/logo-2.png"

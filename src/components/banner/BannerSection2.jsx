@@ -27,7 +27,8 @@ const BannerSection2 = () => {
                     <div className="fz-banner-txt">
                         <h1 className="fz-2-heading">Creative Jewelry Collection</h1>
                         <div className="fz-def_btn_wrapper">
-                            <Link to="/shop" className="fz-def-btn">
+                            {/* <Link to="/shop" className="fz-def-btn"> */}
+                            <Link to="#" className="fz-def-btn">
                                 <span></span>
                                View Our Collections
                                 <i className="fa-light fa-arrow-up-right ml-10"></i>

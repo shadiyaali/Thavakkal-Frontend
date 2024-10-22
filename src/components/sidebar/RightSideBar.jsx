@@ -33,7 +33,7 @@ const RightSideBar = ({ showMenu }) => {
         </div>
         <div className="fz-offcanvas-main-sideinfo-section">
           <div className="fz-offcanvas-main-sideinfo">
-            <div className="fz-offcanvas-main-search mb-45">
+            {/* <div className="fz-offcanvas-main-search mb-45">
               <form action="#">
                 <input
                   type="search"
@@ -45,8 +45,8 @@ const RightSideBar = ({ showMenu }) => {
                   <i className="fa-light fa-magnifying-glass"></i>
                 </button>
               </form>
-            </div>
-            <div className="fz-offcanvas-main-actions mb-15">
+            </div> */}
+            {/* <div className="fz-offcanvas-main-actions mb-15">
               <a role="button" onClick={() => closeAndNavigate("/cart")}>
                 <span className="fz-off-actions-icon">
                   <i className="fa-thin fa-bag-shopping"></i>
@@ -63,9 +63,9 @@ const RightSideBar = ({ showMenu }) => {
                   <span>View Wishlist</span>
                 </span>
               </a>
-            </div>
+            </div> */}
 
-            <div className="fz-offcanvas-main-contacts">
+            {/* <div className="fz-offcanvas-main-contacts">
               <h4 className="fz-offcanvas-main-contacts-title mb-30">
                 Get In Touch
               </h4>
@@ -95,9 +95,9 @@ const RightSideBar = ({ showMenu }) => {
                   </span>
                 </li>
               </ul>
-            </div>
+            </div> */}
 
-            <div className="fz-offcanvas-main-socials mt-45">
+            {/* <div className="fz-offcanvas-main-socials mt-45">
               <Link to="#">
                 <i className="fa-brands fa-facebook-f"></i>
                 <i className="fa-brands fa-facebook-f"></i>
@@ -114,7 +114,7 @@ const RightSideBar = ({ showMenu }) => {
                 <i className="fa-brands fa-youtube"></i>
                 <i className="fa-brands fa-youtube"></i>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

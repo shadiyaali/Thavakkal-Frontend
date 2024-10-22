@@ -29,7 +29,14 @@ const HeaderNav = ({ position, downArrow }) => {
 
           
         </li>
-        
+        <li className="fz-dropdown fz-nav-item">
+          <a role="button" className="fz-nav-link">
+            <span>Contact</span>{" "}
+            
+          </a>
+
+          
+        </li>
       </ul>
     </nav>
   );

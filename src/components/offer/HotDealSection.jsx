@@ -37,9 +37,10 @@ const HotDealSection = () => {
                                     </div>
                                 </div>
                                 <div className="fz-2-single-product-txt">
+                                <h5 className="fz-2-single-product-title"><Link to="/shopDetails">SKU</Link></h5>
                                     <span className="fz-2-single-product-category"><Link to="/shop">{item.category}</Link></span>
                                     <h5 className="fz-2-single-product-title"><Link to="/shopDetails">{item.name}</Link></h5>
-                                    <span className="fz-2-single-product-price">${item.price}<span className="prev-price">${item.oldPrice}</span></span>
+                                    {/* <span className="fz-2-single-product-price">${item.price}<span className="prev-price">${item.oldPrice}</span></span> */}
                                 </div>
                             </div>
                         </div>  
@@ -50,7 +51,8 @@ const HotDealSection = () => {
 
             <div class="text-center">
             <div className="fz-def_btn_wrapper mt-10">
-            <Link to="/shop" className="fz-def-btn">
+            {/* <Link to="/shop" className="fz-def-btn"> */}
+            <Link to="#" className="fz-def-btn">
             <span></span>
             Custom Your Design
             <i className="fa-light fa-arrow-up-right ml-10"></i>

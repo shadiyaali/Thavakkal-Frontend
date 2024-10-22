@@ -28,6 +28,7 @@ const BestSellerTabContent = () => {
                         </div>
                     </div>
                     <div className="fz-2-single-product-txt">
+                    <h5 className="fz-2-single-product-title"><Link to="/shopDetails">SKU</Link></h5>
                         <span className="fz-2-single-product-category"><Link to="shop">{item.category}</Link></span>
                         <h5 className="fz-2-single-product-title"><Link to="shopDetails">{item.name}</Link></h5>
                         {/* <div className='rate'>

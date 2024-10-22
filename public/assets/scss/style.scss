@@ -186,3 +186,9 @@ TABLE OF CONTENTS:
 .fz-2-section-heading {
     margin-bottom: 30px;
 }
+
+@media (max-width: 991px){
+    .header-nav-container {
+    display: none;
+  }
+  }

@@ -3,7 +3,7 @@ import ProductCategoryList2 from "./ProductCategoryList2";
 import FrameShapeFilter from "./FrameShapeFilter";
 import FrameColorFilter from "./FrameColorFilter";
 import FrameBrandFilter from "./FrameBrandFilter";
-import FramePriceFilter from "./FramePriceFIlter";
+// import FramePriceFilter from "./FramePriceFIlter";
 import FrameWidthFilter from "./FrameWidthFilter";
 import GenderSelectFilter from "./GenderSelectFilter";
 import SalesFilter from "./SalesFilter";
@@ -24,7 +24,7 @@ const ProductSidebar = ({ sidebarRef, active }) => {
       <FrameBrandFilter />
       <MaterialFilter />
       <GlassColorFilter />
-      <FramePriceFilter />
+      {/* <FramePriceFilter /> */}
       <FrameWidthFilter />
       <div className="sidebar-single-area">
         <button className="fz-5-def-btn-2 w-100">Reset</button>

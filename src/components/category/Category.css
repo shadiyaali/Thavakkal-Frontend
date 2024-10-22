@@ -38917,5 +38917,33 @@
 
   .p-top-20 { padding-top: 0px;}
 
-  
-  
+ 
+.category-row {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 20px;  
+  justify-content: space-between; 
+}
+
+.category-block {
+  text-align: center;
+  width: 200px; 
+}
+
+.category-image svg {
+  width: 100px;
+  height: 100px;
+}
+
+.category-details h5 {
+  margin-top: 10px;
+}
+
+.category-details h6 {
+  margin: 5px 0;
+}
+
+.custom-row-gap {
+    row-gap: 30px;  
+  }
+   

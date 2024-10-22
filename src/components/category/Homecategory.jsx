@@ -1,7 +1,5 @@
 import React, { Fragment } from "react";
-import Slider from "react-slick";
 import {
-  Slider6,
   svgDiamond,
   svgEarings,
   svgLongEarings,
@@ -18,49 +16,49 @@ const Data = [
   {
     img: svgRings,
     title: "rings",
-    desc: "23 items",
+  
     link: "#",
   },
   {
     img: svgDiamond,
     title: "diamons",
-    desc: "54 items",
+ 
     link: "#",
   },
   {
     img: svgNeckles,
     title: "neckles",
-    desc: "15 items",
+ 
     link: "#",
   },
   {
     img: svgWatch,
     title: "watches",
-    desc: "62 items",
+ 
     link: "#",
   },
   {
     img: svgPearsing,
     title: "pearsing",
-    desc: "12 items",
+ 
     link: "#",
   },
   {
     img: svgTiara,
     title: "tiara",
-    desc: "33 items",
+  
     link: "#",
   },
   {
     img: svgEarings,
     title: "earings",
-    desc: "21 items",
+ 
     link: "#",
   },
   {
     img: svgLongEarings,
     title: "long earings",
-    desc: "18 items",
+    
     link: "#",
   },
 ];
@@ -86,29 +84,27 @@ const MasterCategory = ({ img, title, desc, link }) => {
 const Category = () => {
   return (
     <section className="bg-gry-1 p-top-20">
-    <Fragment>
-      <Container>
-        <section className="section-b-space border-section border-top-0">
-          <Row>
-            <Col>
-              <Slider {...Slider6} className="slide-6 no-arrow">
-                {Data.map((data, i) => {
-                  return (
+      <Fragment>
+        <Container>
+          <section className="section-b-space border-section border-top-0">
+          <Row className="custom-row-gap">
+
+              {Data.map((data, i) => {
+                return (
+                  <Col key={i} xs="6" md="4" lg="3">
                     <MasterCategory
-                      key={i}
                       img={data.img}
                       link={data.link}
                       title={data.title}
-                      desc={data.desc}
+                     
                     />
-                  );
-                })}
-              </Slider>
-            </Col>
-          </Row>
-        </section>
-      </Container>
-    </Fragment>
+                  </Col>
+                );
+              })}
+            </Row>
+          </section>
+        </Container>
+      </Fragment>
     </section>
   );
 };

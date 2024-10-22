@@ -16,54 +16,46 @@ const Data = [
   {
     img: svgRings,
     title: "rings",
-  
     link: "#",
   },
   {
     img: svgDiamond,
-    title: "diamons",
- 
+    title: "diamonds",
     link: "#",
   },
   {
     img: svgNeckles,
-    title: "neckles",
- 
+    title: "necklaces",
     link: "#",
   },
   {
     img: svgWatch,
     title: "watches",
- 
     link: "#",
   },
   {
     img: svgPearsing,
-    title: "pearsing",
- 
+    title: "piercings",
     link: "#",
   },
   {
     img: svgTiara,
     title: "tiara",
-  
     link: "#",
   },
   {
     img: svgEarings,
-    title: "earings",
- 
+    title: "earrings",
     link: "#",
   },
   {
     img: svgLongEarings,
-    title: "long earings",
-    
+    title: " earrings",
     link: "#",
   },
 ];
 
-const MasterCategory = ({ img, title, desc, link }) => {
+const MasterCategory = ({ img, title, link }) => {
   return (
     <div className="category-block">
       <a href={link}>
@@ -75,7 +67,6 @@ const MasterCategory = ({ img, title, desc, link }) => {
         <a href={link}>
           <h5>{title}</h5>
         </a>
-        <h6>{desc}</h6>
       </div>
     </div>
   );
@@ -87,16 +78,14 @@ const Category = () => {
       <Fragment>
         <Container>
           <section className="section-b-space border-section border-top-0">
-          <Row className="custom-row-gap">
-
+            <Row className="justify-content-center g-4"> {/* Center content and add gap */}
               {Data.map((data, i) => {
                 return (
-                  <Col key={i} xs="6" md="4" lg="3">
+                  <Col key={i} xs="6" sm="6" md="4" lg="3" className="d-flex justify-content-center">
                     <MasterCategory
                       img={data.img}
                       link={data.link}
                       title={data.title}
-                     
                     />
                   </Col>
                 );

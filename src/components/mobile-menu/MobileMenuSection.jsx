@@ -42,7 +42,7 @@ const MobileMenuSection = ({ navigate }) => {
           <div className="fz-nav-item mean-last">
             <a
               role="button"
-              onClick={() => navigate("/contact")}
+              // onClick={() => navigate("/contact")}
               className="fz-nav-link"
             >
               Contact

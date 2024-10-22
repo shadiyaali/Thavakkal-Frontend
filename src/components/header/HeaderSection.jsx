@@ -143,7 +143,7 @@ const HeaderSection = () => {
           </div>
         </div>
       </div>
-      <WishlistModal
+      {/* <WishlistModal
         wishlistArray={wishlist}
         removeItem={handleRemoveItemWishlist}
       />
@@ -151,7 +151,7 @@ const HeaderSection = () => {
         cartArray={cartItems}
         remove={handleRemoveItem}
         quantity={handleQuantityChange}
-      />
+      /> */}
     </header>
   );
 };

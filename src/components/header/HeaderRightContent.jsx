@@ -48,7 +48,7 @@ const HeaderRightContent = () => {
           </li>
         </ul>
       </div>
-      <WishlistModal
+      {/* <WishlistModal
         wishlistArray={wishlist}
         removeItem={handleRemoveItemWishlist}
       />
@@ -56,7 +56,7 @@ const HeaderRightContent = () => {
         cartArray={cartItems}
         remove={handleRemoveItem}
         quantity={handleQuantityChange}
-      />
+      /> */}
     </>
   );
 };

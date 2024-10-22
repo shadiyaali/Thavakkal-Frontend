@@ -68,7 +68,8 @@ const HeaderSection3 = () => {
                 </a>
               </li>
               <li>
-                <Link to="/account" className="d-none d-lg-block">
+                {/* <Link to="/account" className="d-none d-lg-block"> */}
+                <Link to="#" className="d-none d-lg-block">
                   <i className="fa-light fa-user"></i>
                 </Link>
               </li>

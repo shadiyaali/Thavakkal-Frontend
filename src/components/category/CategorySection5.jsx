@@ -10,7 +10,7 @@ const CategorySection5 = () => {
         <div className="fz-6-categories-bg">
           <div className="row fz-6-categories-row">
             <div className="col-xl-3 col-lg-4 col-6">
-              <Link to="/shop" className="fz-6-category">
+              <Link to="#" className="fz-6-category">
                 <div className="fz-6-category-txt">
                   <h6 className="fz-6-category-title">Stoptech</h6>
                   <span className="fz-6-category-amount">5 products</span>
@@ -26,7 +26,7 @@ const CategorySection5 = () => {
             </div>
 
             <div className="col-xl-3 col-lg-4 col-6">
-              <Link to="/shop" className="fz-6-category">
+              <Link to="#" className="fz-6-category">
                 <div className="fz-6-category-txt">
                   <h6 className="fz-6-category-title">Wheel & Tire</h6>
                   <span className="fz-6-category-amount">5 products</span>
@@ -42,7 +42,7 @@ const CategorySection5 = () => {
             </div>
 
             <div className="col-xl-3 col-lg-4 col-6">
-              <Link to="/shop" className="fz-6-category">
+              <Link to="#" className="fz-6-category">
                 <div className="fz-6-category-txt">
                   <h6 className="fz-6-category-title">Camera</h6>
                   <span className="fz-6-category-amount">5 products</span>
@@ -58,7 +58,7 @@ const CategorySection5 = () => {
             </div>
 
             <div className="col-xl-3 col-lg-4 col-6">
-              <Link to="/shop" className="fz-6-category">
+              <Link to="#" className="fz-6-category">
                 <div className="fz-6-category-txt">
                   <h6 className="fz-6-category-title">Turbo</h6>
                   <span className="fz-6-category-amount">5 products</span>
@@ -74,7 +74,7 @@ const CategorySection5 = () => {
             </div>
 
             <div className="col-xl-3 col-lg-4 col-6">
-              <Link to="/shop" className="fz-6-category">
+              <Link to="#" className="fz-6-category">
                 <div className="fz-6-category-txt">
                   <h6 className="fz-6-category-title">Steering</h6>
                   <span className="fz-6-category-amount">5 products</span>
@@ -90,7 +90,7 @@ const CategorySection5 = () => {
             </div>
 
             <div className="col-xl-3 col-lg-4 col-6">
-              <Link to="/shop" className="fz-6-category">
+              <Link to="#" className="fz-6-category">
                 <div className="fz-6-category-txt">
                   <h6 className="fz-6-category-title">Lighting</h6>
                   <span className="fz-6-category-amount">5 products</span>

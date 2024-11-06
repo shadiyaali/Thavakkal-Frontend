@@ -1,55 +1,117 @@
+import React, { useContext, useEffect, useState } from 'react';
 import { FarzaaContext } from '../../context/FarzaaContext';
-import React, { useContext } from 'react'
-import { Form } from 'react-bootstrap'
+import axios from 'axios';
+import { BASE_URL } from '../helpers/config';
+import { Link } from 'react-router-dom';
 
 const ProductViewFilter = () => {
     const {
-        isListView,
-        setListView,
-        setGridView,
-        handleSortChange,
-        sortBy,
-        currentPage,
-        productsPerPage,
-        totalProducts,
-    } = useContext(FarzaaContext)
-    const startItem = (currentPage - 1) * productsPerPage + 1;
-    const endItem = Math.min(currentPage * productsPerPage, totalProducts);
-  return (
-    <div className="product-view-actions">
-        <div className="row gy-3 align-items-center">
-            <div className="col-xxl-6 col-xl-6 col-lg-5 col-6 col-xxs-12 text-center text-md-start">
-                <p className="text-center text-sm-start"> Showing {startItem}-{endItem} of {totalProducts} results</p>
-            </div>
+        handleCategoryFilter,
+        addToJeweleryWishlist,
+        addToJeweleryCart,
+        searchedProducts,  
+        searchTerm,  
+        activeCategory  
+    } = useContext(FarzaaContext);
 
-            <div className="col-xxl-6 col-xl-6 col-lg-7 col-6 col-xxs-12 col-sm-6">
-                <div className="product-view-right-actions text-center text-md-end d-flex justify-content-center justify-content-md-end">
-                    <div className="view-type">
-                        <button className={`grid-view ${isListView? '' :'active'}`} onClick={setGridView}>
-                            <i className="fa-solid fa-grid-2"></i>
-                        </button>
 
-                        <button className={`list-view ${isListView? 'active' :''}`} onClick={setListView}>
-                            <i className="fa-light fa-list"></i>
-                        </button>
-                    </div>
+    const defaultQuantity = 1;
+    const [quantity, setQuantity] = useState(defaultQuantity);
 
-                    <div className="product-sorting d-inline-block">
-                        <form className="" action="#">
-                            <Form.Select className="nice-select" onChange={handleSortChange} value={sortBy}>
-                            <option value="">Default</option>
-                            <option value="name-az">By Name (A to Z)</option>
-                            <option value="name-za">By Name (Z to A)</option>
-                            <option value="price-low-high">By Price (Low to High)</option>
-                            <option value="price-high-low">By Price (High to Low)</option>
-                            </Form.Select>
-                        </form>
-                    </div>
-                </div>
+    const handleQuantityChange = (newQuantity) => {
+        if (newQuantity >= 1) {
+            setQuantity(newQuantity);
+        }
+    };
+    const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+  
+    const fetchData = async () => {
+        try {
+         
+            const productsResponse = await axios.get(`${BASE_URL}/products/products_list/`);  
+            
+          
+            setProducts(productsResponse.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setError('Failed to load data. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const filteredProducts = products.filter(product => {
+        const matchesCategory = activeCategory ? product.category_name === activeCategory : true;
+        const matchesSearch = product.product_name.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+
+    return (
+        <div className="product-category-and-view">
+            <div className="row gy-4 gx-3 justify-content-center">
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map((item) => (
+                        <div className="col-xl-4 col-md-4 col-6 col-xxs-6" key={item.id}>
+                            <div className="fz-2-single-product">
+                                <div className="fz-2-single-product-img">
+                                    <img src={BASE_URL + item.product_image} alt={item.product_name} />
+                                    <div className="fz-2-single-product-actions">
+                                <button
+                                    className="fz-add-to-cart-btn"
+                                    onClick={() => addToJeweleryCart(item.id, quantity)}
+                                >
+                                    Add to cart
+                                </button>
+
+
+                                <div className="btnactions">
+                                    <div className="fz-product-details__quantity cart-product__quantity">
+                                        <button className="minus-btn cart-product__minus" onClick={() => handleQuantityChange(quantity - 1)}>
+                                            <i className="fa-light fa-minus"></i>
+                                        </button>
+                                        <input
+                                            type="number"
+                                            name="product-quantity"
+                                            className="cart-product-quantity-input"
+                                            value={quantity}
+                                            onChange={(e) => handleQuantityChange(Math.max(1, parseInt(e.target.value)))}
+                                            min="1"
+                                        />
+                                        <button className="plus-btn cart-product__plus" onClick={() => handleQuantityChange(quantity + 1)}>
+                                            <i className="fa-light fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                                </div>
+                                <div className="fz-2-single-product-txt">
+                                    <h5 className="fz-2-single-product-title"><Link to="#">{item.product_name}</Link></h5>
+                                    <span className="fz-2-single-product-category"><Link to="#">{item.category_name}</Link></span>
+                                    <h5 className="fz-2-single-product-title"><Link to="#">SKU: {item.SKU}</Link></h5>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div>No products found.</div>
+                )}
             </div>
         </div>
-    </div>
-  )
-}
+    );
+};
 
-export default ProductViewFilter
+export default ProductViewFilter;

@@ -5,6 +5,7 @@ const HeaderNav = ({ position, downArrow }) => {
   return (
     <nav className="fz-header-nav">
       <ul className={`align-items-center ${position}`}>
+      <Link to="/">
         <li className="fz-dropdown fz-nav-item">
           <a role="button" className="fz-nav-link">
             <span>home</span>{" "}
@@ -13,14 +14,17 @@ const HeaderNav = ({ position, downArrow }) => {
 
            
         </li>
+        </Link>
+        <Link to="/shop">
         <li className="fz-dropdown fz-nav-item">
           <a role="button" className="fz-nav-link">
-            <span>Products</span>{" "}
+            <span>Products</span>{""}
              
           </a>
 
           
         </li>
+        </Link>
         <li className="fz-dropdown fz-nav-item">
           <a role="button" className="fz-nav-link">
             <span>Customized Products</span>{" "}

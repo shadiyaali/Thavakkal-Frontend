@@ -1,0 +1,26 @@
+/* toastStyles.css */
+.Toastify__toast--success {
+    background-color: white; /* Success background color */
+    color: #5b4caf; /* Success text color */
+}
+
+.Toastify__toast--error {
+    background-color: #f44336; /* Error background color */
+    color: #4caf50; /* Error text color */
+}
+
+.Toastify__toast--info {
+    background-color: #2196f3; /* Info background color */
+    color: #4caf50; /* Info text color */
+}
+
+.Toastify__toast--warning {
+    background-color: #ff9800;  
+    color: #4caf50;  
+}
+
+.Toastify__toast-body {
+    font-size: 16px; 
+}
+
+ 

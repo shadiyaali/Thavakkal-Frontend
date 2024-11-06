@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import VideoModal from '../modal/VideoModal'
+ 
 import { FarzaaContext } from '../../context/FarzaaContext'
 import { Link } from 'react-router-dom'
 import img from '../../../public/assets/images/img.jpg'
@@ -9,26 +9,14 @@ const BannerSection2 = () => {
   return (
     <section className="fz-2-banner-section">
         <div className="container position-relative">
-            {/* <div className="fz-banner-left-actions">
-                <div className="fz-banner-socials">
-                    <ul className="d-flex">
-                        <li><Link to="#">Facebook</Link></li>
-                        <li><Link to="#">Instagram</Link></li>
-                        <li><Link to="#">LinkedIn</Link></li>
-                    </ul>
-                </div>
-
-                <div className="fz-banner-search-btn">
-                    <button className="fz-2-search-btn"><i className="fa-regular fa-magnifying-glass"></i></button>
-                </div>
-            </div> */}
+            
             <div className="row align-items-center">
                 <div className="col-lg-7">
                     <div className="fz-banner-txt">
                         <h1 className="fz-2-heading">Creative Jewelry Collection</h1>
                         <div className="fz-def_btn_wrapper">
-                            {/* <Link to="/shop" className="fz-def-btn"> */}
-                            <Link to="#" className="fz-def-btn">
+                       
+                            <Link to="/shop" className="fz-def-btn">
                                 <span></span>
                                View Our Collections
                                 <i className="fa-light fa-arrow-up-right ml-10"></i>
@@ -41,9 +29,7 @@ const BannerSection2 = () => {
                     <div className="fz-banner-vid">
                         <img src={img} alt="background image" className="fz-banner-vid-img"/>
                         
-                        {/* <div className="fz-banner-vid-txt">
-                            <h4><span>25K</span> New Collections</h4>
-                        </div> */}
+                    
 
                         <div className="fz-banner-rounded-sticker">
                             <img className="fz-rotateText" src="assets/images/curved-txt.png" alt="rotate-text image"/>
@@ -73,7 +59,7 @@ const BannerSection2 = () => {
             </div>
             <div className="fz-overlay"></div>
         </div>
-        <VideoModal/>
+ 
     </section>
   )
 }

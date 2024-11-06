@@ -10,18 +10,16 @@ import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import Account from "./pages/Account";
 import Checkout from "./pages/Checkout";
-import Blog from "./pages/Blog";
-import BlogDetails from "./pages/BlogDetails";
+ 
 import Contact from "./pages/Contact";
 import Error from "./pages/Error";
+import UserProfile from "./pages/UserProfilepage/profile";
  
  
  
  
  
  
- 
-import Shop2 from "./pages/Shop2";
 
 
 
@@ -30,7 +28,10 @@ import Login from "./components/Admin/Adminlogin/Login";
 import Dashboard from "./pages/Dashboard/Dashboard"
 import AddCategory from "./components/Admin/Categories/AddCategory"
 import ManageCategory from "./components/Admin/Categories/ManageCategory"
-
+import OrderPage from "./pages/OrderPage/OrderPage";
+import CustomePage from "./pages/CustomeproductPage/CustomePage";
+ 
+import CustomeFullPage from "./pages/CustomeproductPage/CustomFullPage"
 function App() {
   return (
     <Router>
@@ -43,18 +44,22 @@ function App() {
       
     
         <Route path="/shop" element={<Shop />} />
-        <Route path="/shop-2" element={<Shop2 />} />
-        <Route path="/shopDetails" element={<ShopDetails />} />
+ 
+        <Route path="/products/:id" element={<ShopDetails />} />
+        <Route path="/customized-products/:id" element={<CustomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/account" element={<Account />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blogDetails" element={<BlogDetails />} />
+   
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Error />} />
+        <Route path="/profile" element={<UserProfile/>} />
+        <Route path="/my-orders" element={<OrderPage/>} />
+        <Route path="/custom-full" element={< CustomeFullPage/>} />
+      
 {/* .............................................................................................................. */}
         <Route path="/login" element={<Login/>} /> 
         <Route path="/dashboard" element={<Dashboard/>} /> 

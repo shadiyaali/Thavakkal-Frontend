@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Tab } from "react-bootstrap";
-import NewTabContent from "./NewTabContent";
+ 
 import BestSellerTabContent from "./BestSellerTabContent";
 
 const LuxurySection = () => {

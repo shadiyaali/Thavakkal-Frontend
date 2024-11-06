@@ -1,0 +1,55 @@
+/* src/components/ProductCategoryAndView.css */
+.product-category-and-view {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.sidebar {
+    flex: 1 1 250px; /* Takes up at least 250px, but can grow */
+    margin-right: 20px; /* Space between sidebar and products */
+}
+
+.products {
+    flex: 3 1 0; /* Takes up remaining space */
+}
+
+.product-categories {
+    list-style: none;
+    padding: 0;
+}
+
+.product-categories li {
+    padding: 10px;
+    border: 1px solid #ddd; /* Optional border for visual separation */
+    margin-bottom: 5px;
+    transition: background 0.3s;
+}
+
+.product-categories li:hover,
+.product-categories li.active {
+    background: #f0f0f0; /* Highlight on hover and active */
+}
+
+.fz-2-single-product {
+    border: 1px solid #ddd; /* Optional border for product items */
+    padding: 15px;
+    text-align: center; /* Center text in product cards */
+    border-radius: 5px; /* Rounded corners */
+    transition: box-shadow 0.3s; /* Smooth shadow transition */
+}
+
+.fz-2-single-product:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+@media (max-width: 768px) {
+    .product-category-and-view {
+        flex-direction: column; /* Stack on small screens */
+    }
+
+    .sidebar {
+        margin-right: 0; /* Remove margin on mobile */
+        margin-bottom: 20px; /* Space below the sidebar */
+    }
+}

@@ -1,40 +1,73 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react"; 
 import HeaderNav from "../navigation/HeaderNav";
-import WishlistModal from "../modal/WishlistModal";
+ 
 import CartModal from "../modal/CartModal";
 import HeaderCategoryArea from "./HeaderCategoryArea";
 import { FarzaaContext } from "../../context/FarzaaContext";
 import { Link } from "react-router-dom";
+import "./header.css";
+import { BASE_URL } from '../helpers/config';
+import axios from 'axios';
 
 const HeaderSection3 = () => {
   const {
     handleWishlistShow,
     handleCartShow,
     isHeaderFixed,
-    jeweleryWishlist,
-    jeweleryAddToCart,
-    jeweleryCartItemAmount,
-    handleRemoveJeweleryItemWishlist,
-    handleRemoveJeweleryCartItem,
-    handleJeweleryCartQuantityChange,
     handleSidebarOpen,
   } = useContext(FarzaaContext);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authToken'));
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [jeweleryCartItemAmount, setJeweleryCartItemAmount] = useState(0);  
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
+    setIsLoggedIn(false);
+    setJeweleryCartItemAmount(0); 
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
+
+    if (token) {
+      fetchCartItems(); 
+    }
+  }, [isLoggedIn]);  
+
+  const fetchCartItems = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await axios.get(`${BASE_URL}/products/cart-items/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setJeweleryCartItemAmount(response.data.cart_items.length); 
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+    }
+  };
+
+  const toggleDropdown = (e) => {
+    e.stopPropagation();
+    setDropdownOpen((prev) => {
+      console.log("Dropdown Open State:", !prev);
+      return !prev;
+    });
+  };
+
   return (
-    <header
-      className={`fz-header-section fz-2-header-section to-be-fixed ${
-        isHeaderFixed ? "fixed" : ""
-      }`}
-    >
+    <header className={`fz-header-section fz-2-header-section to-be-fixed ${isHeaderFixed ? "fixed" : ""}`}>
       <div className="row m-0 align-items-center">
         <div className="col-lg-4 col-md-6 col-9">
           <div className="fz-header-left-content d-flex align-items-center">
             <div className="fz-logo-container logo-top">
               <Link to="/">
-                <img
-                  src="assets/images/logo-2.png"
-                  alt="logo"
-                  className="fz-logo"
-                />
+                <img src="assets/images/logo-2.png" alt="logo" className="fz-logo" />
               </Link>
             </div>
             <HeaderCategoryArea header={""} title={""} />
@@ -48,31 +81,60 @@ const HeaderSection3 = () => {
         <div className="col-lg-2 col-md-6 col-3 order-2 order-lg-3">
           <div className="fz-header-right-content">
             <ul className="fz-header-right-actions d-flex align-items-center justify-content-end">
-              <li>
-                <a
-                  role="button"
-                  className="fz-header-wishlist-btn d-none d-lg-block"
-                  onClick={handleWishlistShow}
-                >
-                  <i className="fa-light fa-heart"></i>
-                </a>
+              <Link to="/cart">
+                <li>
+                  <a
+                    role="button"
+                    className="fz-header-cart-btn d-none d-lg-block"
+                    onClick={handleCartShow}
+                  >
+                    <i className="fa-light fa-cart-shopping"></i>
+                    <span className="count">{jeweleryCartItemAmount}</span>
+                  </a>
+                </li>
+              </Link>
+
+              <li className="dropdown">
+                {isLoggedIn ? (
+                  <>
+                    <button
+                      onClick={toggleDropdown}
+                      className="d-none d-lg-block"
+                      aria-expanded={dropdownOpen}
+                    >
+                      <i className="fa-light fa-user"></i>
+                      <span>Profile</span>
+                    </button>
+
+                    {dropdownOpen && (
+                      <div className="dropdown-menu show">
+                        <Link to="/my-orders" className="dropdown-item">
+                          <i className="fa-light fa-box"></i>
+                          <span>My Orders</span>
+                        </Link>
+                        <Link to="/profile" className="dropdown-item">
+                          <i className="fa-light fa-user"></i>
+                          <span>My Profile</span>
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="dropdown-item"
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <i className="fa-light fa-sign-out"></i>
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link to="/account" className="d-none d-lg-block">
+                    <i className="fa-light fa-user"></i>
+                    <span>Login</span>
+                  </Link>
+                )}
               </li>
-              <li>
-                <a
-                  role="button"
-                  className="fz-header-cart-btn d-none d-lg-block"
-                  onClick={handleCartShow}
-                >
-                  <i className="fa-light fa-cart-shopping"></i>
-                  <span className="count">{jeweleryCartItemAmount}</span>
-                </a>
-              </li>
-              <li>
-                {/* <Link to="/account" className="d-none d-lg-block"> */}
-                <Link to="#" className="d-none d-lg-block">
-                  <i className="fa-light fa-user"></i>
-                </Link>
-              </li>
+
               <li>
                 <a
                   role="button"
@@ -86,15 +148,6 @@ const HeaderSection3 = () => {
           </div>
         </div>
       </div>
-      {/* <WishlistModal
-        wishlistArray={jeweleryWishlist}
-        removeItem={handleRemoveJeweleryItemWishlist}
-      />
-      <CartModal
-        cartArray={jeweleryAddToCart}
-        remove={handleRemoveJeweleryCartItem}
-        quantity={handleJeweleryCartQuantityChange}
-      /> */}
     </header>
   );
 };

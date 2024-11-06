@@ -14,20 +14,10 @@ const FooterSection2 = () => {
                   <Link to="/">
                     <img src="assets/images/logo-2.png" alt="logo" />
                   </Link>
-                </div>
-
-             
-
-                
-              </div>
+                </div> 
+                 </div>
             </div>
-
-          
-
-            
-
-            
-          </div>
+            </div>
         </div>
       </div>
 

@@ -78,8 +78,8 @@
         line-height: 45px;
         position: relative;
         border-radius: 3px;
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 0;
+        margin-right: 0;
 
         @include sm {
             width: 120px;
@@ -131,10 +131,10 @@ input[type=number].cart-product-quantity-input {
 }
 
 .inner-cart {
-    width: 75%;
+    width: 100%;
 
     @include xl {
-        width: 90%;
+        width: 100%;
     }
 
     @include lg {
@@ -313,7 +313,7 @@ input[type=number].cart-product-quantity-input {
 .cart-checkout-area {
     text-align: center;
     border: 1px solid #e4e4e4;
-    width: 25%;
+    width: 70%;
     border-radius: 10px;
     padding: 30px;
 
@@ -322,16 +322,16 @@ input[type=number].cart-product-quantity-input {
     }
 
     @include xl {
-        width: 35%;
+        width: 75%;
         padding: 20px;
     }
 
     @include lg {
-        width: 40%;
+        width: 60%;
     }
 
     @include sm {
-        width: 70%;
+        width: 100%;
     }
 
     @include xxs {
@@ -354,7 +354,7 @@ input[type=number].cart-product-quantity-input {
     li {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: start;
 
         &:not(:last-child) {
             margin-bottom: 15px;

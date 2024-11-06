@@ -5,9 +5,9 @@ import { FarzaaContext } from "../../context/FarzaaContext";
 
 const CartModal = ({ cartArray, remove, quantity }) => {
   const { showCart, handleCartClose } = useContext(FarzaaContext);
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const navigate = useNavigate();  
 
-  // Function to close the modal and navigate
+ 
   const closeAndNavigate = (path) => {
     handleCartClose();
     navigate(path);

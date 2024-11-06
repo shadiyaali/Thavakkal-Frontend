@@ -1,73 +1,54 @@
-import { Nav, Tab } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import ProductDetailSlider from '../sliders/ProductDetailSlider';
 import ProductDetailTextSection from './ProductDetailTextSection';
-import ProductDescTabPane from './ProductDescTabPane';
-import ProductReviewTabPane from './ProductReviewTabPane';
-import { useState } from 'react';
+import { BASE_URL } from '../helpers/config';
+
 const ProductDetailSection = () => {
-    const [activeTab, setActiveTab] = useState('description');
+    const { id } = useParams();  
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}/products/products/${id}/`);  
+                setProduct(response.data);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+                setError('Could not fetch product details. Please try again later.');
+            } finally {
+                setLoading(false);  
+            }
+        };
 
-    const handleTabChange = (tab) => {
-        setActiveTab(tab);
-    };
-  return (
-    <section className="fz-product-details">
-        <div className="container">
-            <div className="row align-items-start justify-content-center">
-                <div className="col-lg-5 col-md-6 col-12 col-xxs-12">
-                    <ProductDetailSlider/>
-                </div>
+        fetchProductDetails();
+    }, [id]);
 
+    if (loading) {
+        return <div>Loading...</div>; 
+    }
 
-                <div className="col-lg-7 col-md-6">
-                    <ProductDetailTextSection/>
-                </div>
+    if (error) {
+        return <div>{error}</div>; 
+    }
 
-                <div className="col-12">
-                    <div className="fz-product-details__additional-info">
-                        <Nav 
-                        activeKey={activeTab}
-                        onSelect={handleTabChange}
-                        className="nav nav-tabs" 
-                        id="myTab"
-                        >
-                            <Nav.Item className="nav-item" role="presentation">
-                                <Nav.Link 
-                                    className="nav-link" 
-                                    eventKey='description'
-                                    id="descr-tab" 
-                                    role="button"
-                                >
-                                    Description
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item className="nav-item" role="presentation">
-                                <Nav.Link 
-                                    className="nav-link" 
-                                    eventKey='review'
-                                    id="review-tab" 
-                                    role="button"
-                                >
-                                    Reviews
-                                </Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                        <Tab.Content>
-                            <Tab.Pane eventKey='description' className={`tab-pane ${activeTab === 'description' ? 'show active' : ''}`}>
-                                <ProductDescTabPane/>
-                            </Tab.Pane>
-
-
-                            <Tab.Pane eventKey='review' className={`tab-pane ${activeTab === 'review' ? 'show active' : ''}`}>
-                                <ProductReviewTabPane/>
-                            </Tab.Pane>
-                        </Tab.Content>
+    return (
+        <section className="fz-product-details bg-gry-1">
+            <div className="container">
+                <div className="row align-items-start justify-content-center">
+                    <div className="col-lg-5 col-md-6 col-12 col-xxs-12">
+                        <ProductDetailSlider product={product} />
+                    </div>
+                    <div className="col-lg-7 col-md-6">
+                        <ProductDetailTextSection product={product} />
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-  )
-}
+        </section>
+    );
+};
 
-export default ProductDetailSection
+export default ProductDetailSection;

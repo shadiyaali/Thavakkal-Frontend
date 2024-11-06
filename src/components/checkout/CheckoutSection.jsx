@@ -1,134 +1,147 @@
-import React, { useContext } from 'react'
-import { Form } from 'react-bootstrap'
-import { FarzaaContext } from '../../context/FarzaaContext'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { FarzaaContext } from '../../context/FarzaaContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../helpers/config';
+import './checkout.css';
 
 const CheckoutSection = () => {
-    const {subTotal, shipping, coupon, finalPrice} = useContext(FarzaaContext)
-  return (
-    <div className="container">
-        <div className="fz-checkout">
-            <form action="#" className="checkout-form">
-                <div className="fz-billing-details">
-                    <div className="row gy-0 gx-3 gx-md-4">
-                        <h3 className="fz-checkout-title">Billing Details</h3>
-                        <div className="col-6 col-xxs-12">
-                            <input type="text" name="first-name" id="checkout-first-name" placeholder="First Name"/>
-                        </div>
-                        <div className="col-6 col-xxs-12">
-                            <input type="text" name="last-name" id="checkout-last-name" placeholder="Last Name"/>
-                        </div>
-                        <div className="col-12">
-                            <input type="text" name="company-name" id="checkout-company-name" placeholder="Company Name"/>
-                        </div>
+    const { finalPrice } = useContext(FarzaaContext);
+    const [cartItems, setCartItems] = useState([]);
+    const [totals, setTotals] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [notes, setNotes] = useState({});
+    const [showConfirmation, setShowConfirmation] = useState(false); // New state for confirmation popup
+    const navigate = useNavigate();
 
-                        <div className="col-12">
-                            <Form.Select className='country-select' name="country" id="checkout-country">
-                                <option value="United States">United States (US)</option>
-                                <option value="United Kingdom">United Kingdom (UK)</option>
-                                <option value="France">France</option>
-                                <option value="Russia">Russia</option>
-                                <option value="Iran">Iran</option>
-                                <option value="Bangladesh">Bangladesh</option>
-                                <option value="Bhutan">Bhutan</option>
-                                <option value="Nepal">Nepal</option>
-                            </Form.Select>
-                        </div>
+    const fetchCartItems = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const response = await axios.get(`${BASE_URL}/products/cart-items/`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setCartItems(response.data.cart_items);
+            setTotals(response.data.totals);
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                        <div className="col-12">
-                            <input type="text" name="house-street-number" id="checkout-house-street-number" placeholder="House Number & Street Name"/>
-                        </div>
+    useEffect(() => {
+        fetchCartItems();
+    }, []);
 
-                        <div className="col-12">
-                            <input type="text" name="apartment-name" id="checkout-apartment-name" placeholder="Apartment, Suite, Unit, etc. (optional)"/>
-                        </div>
+    const handleNoteChange = (id, text) => {
+        setNotes({ ...notes, [id]: text });
+    };
 
-                        <div className="col-12">
-                            <input type="text" name="city-name" id="checkout-city-name" placeholder="Town / City"/>
-                        </div>
+    const handlePlaceOrder = async () => {
+        const token = localStorage.getItem('authToken');
+        const uniqueCartItems = [];
+        const seenSKUs = new Set();
 
-                        <div className="col-6 col-xxs-12">
-                            <Form.Select className='state-select' name="states" id="checkout-states">
-                                <option value="Alabama">Alabama</option>
-                                <option value="Alaska">Alaska</option>
-                                <option value="California">California</option>
-                                <option value="Delaware">Delaware</option>
-                                <option value="Florida">Florida</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Hawaii">Hawaii</option>
-                                <option value="Idaho">Idaho</option>
-                            </Form.Select>
-                        </div>
+        cartItems.forEach(item => {
+            if (!seenSKUs.has(item.product.SKU)) {
+                seenSKUs.add(item.product.SKU);
+                uniqueCartItems.push({
+                    product: item.product.SKU,
+                    quantity: item.quantity,
+                    additional_notes: notes[item.product.SKU] || '',
+                });
+            }
+        });
 
-                        <div className="col-6 col-xxs-12">
-                            <input type="text" name="zip-code" id="checkout-zip-code" placeholder="Zip Code"/>
-                        </div>
+        try {
+            const response = await axios.post(`${BASE_URL}/products/orders/`, { order_items: uniqueCartItems }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-                        <div className="col-6 col-xxs-12">
-                            <input type="number" name="phone-number" id="checkout-phone-number" placeholder="Phone Number"/>
-                        </div>
+            if (response.status === 201) {
+                setShowConfirmation(true);  
+                setTimeout(() => {
+                    setShowConfirmation(false);
+                    navigate('/checkout');
+                }, 3000);  
+            } else {
+                alert("Failed to place order: Unexpected response");
+            }
+        } catch (error) {
+            if (error.response) {
+                alert("Failed to place order: " + (error.response.data.detail || "An error occurred."));
+            } else {
+                alert("Failed to place order: Network error or server not reachable.");
+            }
+        }
+    };
 
-                        <div className="col-6 col-xxs-12">
-                            <input type="email" name="email-address" id="checkout-email-address" placeholder="Email Address"/>
-                        </div>
-
-                        <div className="col">
-                            <input type="checkbox" name="create-account" id="checkout-create-account"/>
-                            <label className='create-acc-lebel' htmlFor="checkout-create-account">Create an Account</label>
-                        </div>
-
-                        <div className="col-12 additional-info">
-                            <label htmlFor="checkout-additional-info" className="fz-checkout-title">Additional Information</label>
-                            <textarea name="additional-info" id="checkout-additional-info" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
-                        </div>
-                    </div>
+    return (
+        <div className="checkout-container">
+            <h3 className="checkout-title">Order Items</h3>
+            <div className='check-cart-div'>
+                <div className="cart-list">
+                    {cartItems.length === 0 ? (
+                        <p>No items in cart.</p>
+                    ) : (
+                        cartItems.map((item) => (
+                            <div className="cart-card" key={item.id}>
+                                <div className="cart-product__img">
+                                    <img src={item.product.product_image} alt="Product" />
+                                </div>
+                                <h4 className="cart-title">{item.product?.product_name}</h4>
+                                <ul className="cart-summary">
+                                    <li><span className="cart-key">Quantity:</span> <span className="cart-value">{item.quantity}</span></li>
+                                    <li><span className="cart-key">Gross Weight:</span> <span className="cart-value">{item.gross_weight} gm</span></li>
+                                    <li><span className="cart-key">Diamond Weight:</span> <span className="cart-value">{item.diamond_weight} gm</span></li>
+                                    <li><span className="cart-key">Color Stones:</span> <span className="cart-value">{item.colour_stones} gm</span></li>
+                                    <li><span className="cart-key">Net Weight:</span> <span className="cart-value">{item.net_weight} gm</span></li>
+                                </ul>
+                                <div className="notes-section">
+                                    <label htmlFor={`note-${item.id}`} className="note-label">Additional Notes:</label>
+                                    <textarea
+                                        id={`note-${item.id}`}
+                                        className="note-textarea"
+                                        value={notes[item.product.SKU] || ''}
+                                        onChange={(e) => handleNoteChange(item.product.SKU, e.target.value)}
+                                        placeholder="Add any specific instructions or notes here"
+                                    />
+                                </div>
+                                <Link to="/cart" className="edit-cart-button">Edit Item</Link>
+                            </div>
+                        ))
+                    )}
                 </div>
 
-                <div className="fz-checkout-sidebar">
-                    <div className="billing-summery">
-                        <h4 className="fz-checkout-title">Billing Summary</h4>
-                        <div className="cart-checkout-area">
-                            <ul className="checkout-summary">
-                                <li>
-                                    <span className="checkout-summary__key">Subtotal</span>
-                                    <span className="checkout-summary__value"><span>$</span>{subTotal}</span>
-                                </li>
-
-                                <li>
-                                    <span className="checkout-summary__key">Shipping</span>
-                                    <span className="checkout-summary__value"><span>$</span>{shipping}</span>
-                                </li>
-
-                                <li>
-                                    <span className="checkout-summary__key">Coupon discount</span>
-                                    <span className="checkout-summary__value">-<span>$</span>{coupon}</span>
-                                </li>
-
-                                <li className="cart-checkout-total">
-                                    <span className="checkout-summary__key">Total</span>
-                                    <span className="checkout-summary__value"><span>$</span>{finalPrice}</span>
-                                </li>
-                            </ul>
-
-
-                            <Link to="/cart" className="fz-1-banner-btn cart-checkout-btn">Edit Order</Link>
-                        </div>
+                {cartItems.length > 0 && (
+                    <div className="total-weights">
+                        <h4>Total Weights</h4>
+                        <p>Total Gross Weight: {totals.total_gross_weight || 0} gm</p>
+                        <p>Total Diamond Weight: {totals.total_diamond_weight || 0} gm</p>
+                        <p>Total Color Stones: {totals.total_colour_stones || 0} gm</p>
+                        <p>Total Net Weight: {totals.total_net_weight || 0} gm</p>
+                        <button onClick={handlePlaceOrder} className="fz-1-banner-btn cart-checkout-btn bg-gold">
+                            Place Order
+                        </button>
                     </div>
+                )}
+            </div>
 
-                    <div className="payment-info">
-                        <h4 className="fz-checkout-title">Payment Information</h4>
-                        <div className="d-flex payment-area align-items-center">
-                            <input type="number" name="Pyament-option" id="checkout-payment-option" placeholder="xxxx xxxx xxxx xxxx"/>
-                            <i className="fa-light fa-credit-card"></i>
-                        </div>
-                        <p className="checkout-payment-descr">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a></p>
-                        <button type="submit" className="fz-1-banner-btn cart-checkout-btn checkout-form-btn">Place Order</button>
+           
+            {showConfirmation && (
+                <div className="confirmation-popup">
+                    <div className="confirmation-content">
+                        <span className="checkmark">&#10003;</span>  
+                        <p>Order placed successfully!</p>
                     </div>
                 </div>
-            </form>
+            )}
         </div>
-    </div>
-  )
-}
+    );
+};
 
-export default CheckoutSection
+export default CheckoutSection;

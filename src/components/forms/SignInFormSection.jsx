@@ -1,58 +1,64 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';   
+import { toast } from 'react-toastify';  
+import { BASE_URL } from '../helpers/config';   
+import axios from 'axios';
 
 const SignInFormSection = () => {
-    const [userName,setUserName] = useState('')
-    const [password,setPassword] = useState('')
-    const handleFormSubmit = (e) => {
+    const [email, setEmail] = useState('');  
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();  
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            const response = await axios.post(`${BASE_URL}/products/user/login/`, {
+                email,
+                password,
+            });
     
-        if (!userName && !password) {
-            toast.error('Please fill out all fields.', { position: 'top-right' });
-        } else if (!password) {
-            toast.warning('Please provide password.', { position: 'top-right' });
-        } else if(!userName){
-            toast.warning('Please provide user name.', { position: 'top-right' });
+            const { access } = response.data;
+    
+            if (access) {
+                localStorage.setItem('authToken', access);  
+                console.log("authToken",access)
+                console.log("email",email)
+                alert('Login successful!');  
+                navigate('/');   
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+            alert('Invalid Credentials'); 
         }
-         else {
-    
-            // If the form is successfully submitted, show a success toast
-            toast.success('Signed In successfully!', { position: 'top-right' });
-            setUserName('');
-            setPassword('');
-        }
-      };
-    
-  return (
-    <form action="#" onSubmit={handleFormSubmit}>
-        <input 
-        type="text" 
-        name="login-username" 
-        id="login-username" 
-        placeholder="Username"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        />
-        <input 
-        type="password" 
-        name="login-password" 
-        id="login-password" 
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        />
-        <div className="sign-in-checkbox-container d-flex justify-content-between">
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input 
+                type="email" 
+                name="login-email" 
+                id="login-email" 
+                placeholder="Email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            <input 
+                type="password" 
+                name="login-password" 
+                id="login-password" 
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="sign-in-checkbox-container d-flex justify-content-between">
             <div className="stay-sign-in">
-                <input type="checkbox" name="sign-in-checkbox" id="sign-in-checkbox"/>
-                <label htmlFor="sign-in-checkbox">Stay Logged in</label>
+               
+                </div>
+                <Link to="#" className="password-recovery-btn">Forgot Your Password?</Link>
             </div>
-            <Link to="#" className="password-recovery-btn">Forgot Your Password?</Link>
-        </div>
+            <button type="submit" className="fz-1-banner-btn single-form-btn">Log in</button>
+        </form>
+    );
+};
 
-        <button type="submit" className="fz-1-banner-btn single-form-btn">Log in</button>
-    </form>
-  )
-}
-
-export default SignInFormSection
+export default SignInFormSection;

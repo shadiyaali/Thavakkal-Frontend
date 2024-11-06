@@ -2,11 +2,14 @@ import {
   allCakeList,
   allProductList,
   blogList,
-  ornamentList,
+
 } from "../data/Data";
 import { createContext, useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+import { BASE_URL } from '../components/helpers/config';
+import 'react-toastify/dist/ReactToastify.css';
+import './toast.css';
 const FarzaaContext = createContext();
 
 const FarzaaContextProvider = ({ children }) => {
@@ -181,17 +184,11 @@ const FarzaaContextProvider = ({ children }) => {
 
     setFilteredProducts(sortedProducts);
   };
+  const [activeCategory, setActiveCategory] = useState(null);
   // category handle method
+  const [filteredProduct, setFilteredProduct] = useState([]);
   const handleCategoryFilter = (category) => {
-    if (category === null) {
-      setFilteredProducts(allProductList); // Show all products
-    } else {
-      const filtered = allProductList.filter(
-        (product) => product.category === category
-      );
-      setFilteredProducts(filtered);
-    }
-    setCurrentPage(1);
+    setActiveCategory(category);
   };
 
   // Price Filter
@@ -216,7 +213,7 @@ const FarzaaContextProvider = ({ children }) => {
     const filtered = allProductList.filter((product) =>
       product.name.toLowerCase().includes(term.toLowerCase())
     );
-    setSearchedProducts(filtered);
+    setFilteredProducts(filtered);
   };
 
   useEffect(() => {
@@ -245,8 +242,8 @@ const FarzaaContextProvider = ({ children }) => {
     selectedTags.length === 0
       ? allProductList
       : allProductList.filter((product) =>
-          selectedTags.includes(product.category)
-        );
+        selectedTags.includes(product.category)
+      );
 
   useEffect(() => {
     if (selectedTags.length > 0) {
@@ -318,10 +315,10 @@ const FarzaaContextProvider = ({ children }) => {
         const updatedItems = cartItems.map((item) =>
           item.id === itemId
             ? {
-                ...item,
-                quantity: newQuantity,
-                total: item.price * newQuantity,
-              }
+              ...item,
+              quantity: newQuantity,
+              total: item.price * newQuantity,
+            }
             : item
         );
         setCartItems(updatedItems);
@@ -591,7 +588,7 @@ const FarzaaContextProvider = ({ children }) => {
   }, [searchQuery, selectedBlogTags, activeBlogCategory]);
 
   // jewelery shop
-  const [jeweleryArray, setJeweleryArray] = useState(ornamentList);
+  const [jeweleryArray, setJeweleryArray] = useState([]);
   const [jeweleryWishlist, setJeweleryWishlist] = useState([]);
   const wishlistJewelleryItemAmount = jeweleryWishlist.reduce(
     (total, item) => total + item.quantity,
@@ -665,68 +662,142 @@ const FarzaaContextProvider = ({ children }) => {
     );
   }, [jeweleryWishlist]);
 
-  // Jewelery add to cart array
+
   const [jeweleryAddToCart, setJeweleryAddToCart] = useState([]);
-  // Jewelery cart total amount
+
   const jeweleryCartItemAmount = jeweleryAddToCart.reduce(
     (total, item) => total + item.quantity,
     0
   );
-  // handle remove method for jewelery shop
+
   const handleRemoveJeweleryCartItem = (itemId) => {
-    const updatedItems = jeweleryAddToCart.filter((item) => item.id !== itemId);
-    setJeweleryAddToCart(updatedItems);
-    toast.error("Item deleted from wishlist!");
+    setJeweleryAddToCart((prevItems) => {
+      const updatedItems = prevItems.filter((item) => item.id !== itemId);
+      toast.error("Item deleted from cart!");
+      return updatedItems;
+    });
   };
-  // handle quantity change for jewelery shop
+
   const handleJeweleryCartQuantityChange = (itemId, newQuantity) => {
-    if (newQuantity === 0) {
-      handleRemoveJeweleryCartItem(itemId); // Call the handleRemoveItem function
+    if (newQuantity <= 0) {
+      handleRemoveJeweleryCartItem(itemId);
     } else {
-      const updatedItems = jeweleryAddToCart.map((item) =>
-        item.id === itemId
-          ? { ...item, quantity: newQuantity, total: item.price * newQuantity }
-          : item
+      setJeweleryAddToCart((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? { ...item, quantity: newQuantity, total: item.price * newQuantity }
+            : item
+        )
       );
-      setJeweleryAddToCart(updatedItems);
     }
   };
-  // Add to cart in jewelery shop
-  const addToJeweleryCart = (itemId) => {
+  const [ornamentList, setOrnamentList] = useState([]);
+  const fetchData = async () => {
+    try {
+
+      const productsResponse = await axios.get(`${BASE_URL}/products/products_list/`);
+
+
+      setOrnamentList(productsResponse.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Failed to load data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const addToJeweleryCart = async (itemId, quantity = 1) => {
+    console.log("Adding item with ID:", itemId, "with quantity:", quantity);
+
+   
+    if (!ornamentList || ornamentList.length === 0) {
+        console.error("Ornament list is not available.");
+        toast.warning("No items available in the ornament list.");
+        return;
+    }
+
+ 
     const itemToAdd = ornamentList.find((item) => item.id === itemId);
+    console.log("Item found:", itemToAdd);
 
     if (itemToAdd) {
-      const existingItemIndex = jeweleryAddToCart.findIndex(
-        (item) => item.id === itemId
-      );
-      // Check if the item is already in the cart
-      if (!jeweleryAddToCart.some((item) => item.id === itemId)) {
-        // Set initial quantity to 1 and total to item's price
-        const newItem = {
-          ...itemToAdd,
-          quantity: 1,
-          total: itemToAdd.price,
-        };
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                toast.error("Please log in to add items to your cart.");
+                return;
+            }
 
-        setJeweleryAddToCart((prevAddToCartItems) => [
-          ...prevAddToCartItems,
-          newItem,
-        ]);
-        toast.success("Item added in AddToCart!");
-      } else if (existingItemIndex !== -1) {
-        // Increment quantity and update total
-        const updatedAddToCartItems = [...jeweleryAddToCart];
-        updatedAddToCartItems[existingItemIndex].quantity += 1;
-        updatedAddToCartItems[existingItemIndex].total =
-          updatedAddToCartItems[existingItemIndex].quantity * itemToAdd.price;
+           
+            const response = await axios.post(`${BASE_URL}/products/cart/add/`, {
+                product_id: itemId,
+                quantity: quantity,
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        setJeweleryAddToCart(updatedAddToCartItems);
-        toast.success("Item list updated in AddToCart!");
-      }
+            const updatedCartItem = response.data;
+            console.log("Cart item saved to backend:", updatedCartItem);
+
+            // Check if the item already exists in the cart
+            setJeweleryAddToCart((prevAddToCartItems) => {
+                // Debug: Log the current state before updating
+                console.log("Current cart items before update:", prevAddToCartItems);
+
+                const existingItemIndex = prevAddToCartItems.findIndex((item) => item.id === itemId);
+                let updatedAddToCartItems;
+
+                if (existingItemIndex === -1) {
+                    // If the item doesn't exist, add it as a new item
+                    const newItem = {
+                        ...itemToAdd,
+                        quantity: quantity,
+                        total: itemToAdd.price * quantity,
+                    };
+
+                    updatedAddToCartItems = [...prevAddToCartItems, newItem];
+                    console.log("New item added. Updated cart items:", updatedAddToCartItems);
+                    toast.success("Item added to cart!");
+                } else {
+                    // If the item exists, update its quantity and total
+                    updatedAddToCartItems = [...prevAddToCartItems]; // Create a new array to avoid mutating state
+                    updatedAddToCartItems[existingItemIndex].quantity += quantity; // Increment quantity
+                    updatedAddToCartItems[existingItemIndex].total = 
+                        updatedAddToCartItems[existingItemIndex].quantity * itemToAdd.price; // Update total
+
+                    console.log("Item quantity updated. Updated cart items:", updatedAddToCartItems);
+                    toast.success("Item quantity updated in cart!");
+                }
+
+                // Return the updated cart
+                return updatedAddToCartItems;
+            });
+        } catch (error) {
+            console.error("Error saving cart item to backend:", error);
+
+            if (error.response && error.response.status === 401) {
+                toast.error("Unauthorized. Please log in to add items to your cart.");
+            } else {
+                toast.error("Failed to add item to cart. Please try again.");
+            }
+        }
     } else {
-      toast.warning("Item not found in ornament list.");
+        console.warn("Item not found in ornament list.");
+        toast.warning("Item not found in ornament list.");
     }
-  };
+};
+
+  
+  
+
+
+
 
   // Cake Shop cart
   // Main cake list array
@@ -839,10 +910,10 @@ const FarzaaContextProvider = ({ children }) => {
         const updatedItems = cartCakes.map((item) =>
           item.id === itemId
             ? {
-                ...item,
-                quantity: newQuantity,
-                total: item.price * newQuantity,
-              }
+              ...item,
+              quantity: newQuantity,
+              total: item.price * newQuantity,
+            }
             : item
         );
         setCartCakes(updatedItems);
@@ -1031,10 +1102,20 @@ const FarzaaContextProvider = ({ children }) => {
         searchModalOpen,
         toggleOpenSearch,
         toggleCloseSearch,
+        activeCategory,
+        handleCategoryFilter,
+        filteredProduct,
+        setFilteredProduct,
+        setJeweleryAddToCart,
+        ornamentList,
+        
       }}
+      
     >
       {children}
+      <ToastContainer />
     </FarzaaContext.Provider>
+    
   );
 };
 

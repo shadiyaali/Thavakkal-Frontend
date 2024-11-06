@@ -1,44 +1,60 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FarzaaContext } from '../../context/FarzaaContext';
-import { allProductList } from '../../data/Data';
-
-const categories = [
-    { name: null, label: 'All Door' },
-    { name: 'Plastic Door', label: 'Plastic Door' },
-    { name: 'Wooden Door', label: 'Wooden Door' },
-    { name: 'Double Layer Door', label: 'Double layer Door' },
-    { name: 'Chinese Door', label: 'Chinese Door' },
-    { name: 'Steel Door', label: 'Steel Door' },
-    { name: 'Solid Color Door', label: 'Solid Color Door' },
-    { name: 'Panel Door', label: 'Panel door' },
-    { name: 'Security Door', label: 'Security door' }
-];
+import axios from 'axios';
+import { BASE_URL } from '../helpers/config';
 
 const ProductCategoryList = () => {
     const { handleCategoryFilter } = useContext(FarzaaContext);
+    const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const handleCategoryClick = (category) => {
-        handleCategoryFilter(category);
-        setActiveCategory(category);
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/products/categories/`);
+            setCategories(response.data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            setCategories([]);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const handleCategoryClick = (categoryName) => {
+        setActiveCategory(categoryName);
+        handleCategoryFilter(categoryName);
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <section className="sidebar-single-area product-categories-area">
-            <h3 className="sidebar-single-area__title">Product categories</h3>
+            <h3 className="sidebar-single-area__title">Product Categories</h3>
             <ul className="product-categories">
-                {categories.map(categoryObj => (
-                    <li
-                        key={categoryObj.name}
-                        onClick={() => handleCategoryClick(categoryObj.name)}
-                        className={activeCategory === categoryObj.name ? 'active' : ''}
-                    >
-                        {categoryObj.label} ({categoryObj.name === null ? allProductList.length : allProductList.filter(product => product.category === categoryObj.name).length})
-                    </li>
-                ))}
+                {categories.length > 0 ? (
+                    categories.map((categoryObj) => (
+                        <li
+                            key={categoryObj.category_name}
+                            onClick={() => handleCategoryClick(categoryObj.category_name)}
+                            className={activeCategory === categoryObj.category_name ? 'active' : ''}
+                            style={{ cursor: 'pointer', textTransform: 'capitalize' }}  
+                        >
+                            {categoryObj.category_name.toUpperCase()}  
+                        </li>
+                    ))
+                ) : (
+                    <li>No categories available</li>
+                )}
             </ul>
         </section>
     );
-}
+};
 
 export default ProductCategoryList;

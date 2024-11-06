@@ -1,60 +1,70 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { FarzaaContext } from '../../context/FarzaaContext'
+import React, { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { FarzaaContext } from '../../context/FarzaaContext';
+import { BASE_URL } from '../helpers/config';
 
-const HeaderCategoryArea = ({header,title}) => {
-    const {
-        isCategoryOpen,
-        handleCategoryBtn,
-        categoryBtnRef,
-    } = useContext(FarzaaContext)
+const HeaderCategoryArea = ({ header, title }) => {
+  const { isCategoryOpen, handleCategoryBtn, categoryBtnRef } = useContext(FarzaaContext);
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/products/categories/`);
+      const data = response.data;
+
+      if (Array.isArray(data)) {
+        setCategories(data);
+      } else {
+        console.warn('Unexpected data format:', data);
+        setCategories([]);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setCategories([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+ 
+  const chunkCategories = (categories, size) => {
+    const chunks = [];
+    for (let i = 0; i < categories.length; i += size) {
+      chunks.push(categories.slice(i, size + i));
+    }
+    return chunks;
+  };
+
+  const categoryChunks = chunkCategories(categories, 6);
+
   return (
     <div className={`fz-category-area ${header}`} ref={categoryBtnRef}>
-        <button className="fz-category-btn" onClick={handleCategoryBtn}>
-            <i className="fa-solid fa-grid"></i>
-            <span className={title}>Category</span>
-        </button>
+      <button className="fz-category-btn" onClick={handleCategoryBtn}>
+        <i className="fa-solid fa-grid"></i>
+        <span className={title}>Category</span>
+      </button>
 
-        {/* <div className={`fz-category-menu ${isCategoryOpen? 'open':''}`}>
-            <div className="row gx-3 gx-md-5 gy-5"> */}
-                {/* <div className="col-md-4 col-6">
-                    <ul className="fz-category-list">
-                        <li><Link to="#">Rings (29)</Link></li>
-                        <li><Link to="#">Earrings (47)</Link></li>
-                        <li><Link to="#">Necklaces (68)</Link></li>
-                        <li><Link to="#">locket (44)</Link></li>
-                        <li><Link to="#">Bangle (12)</Link></li>
-                        <li><Link to="#">Bangle (12)</Link></li>
-                    </ul>
-                </div> */}
-                {/* <div className="col-md-4 col-6">
-                    <ul className="fz-category-list">
-                        <li><Link to="/shop">Rings (29)</Link></li>
-                        <li><Link to="/shop">Earrings (47)</Link></li>
-                        <li><Link to="/shop">Necklaces (68)</Link></li>
-                        <li><Link to="/shop">locket (44)</Link></li>
-                        <li><Link to="/shop">Bangle (12)</Link></li>
-                        <li><Link to="/shop">Bolo tie (48)</Link></li>
-                        <li><Link to="/shop">Brooch (64)</Link></li>
-                        <li><Link to="/shop">Body Piercing (56)</Link></li>
-                    </ul>
-                </div>
-                <div className="col-md-4 col-6">
-                    <ul className="fz-category-list">
-                        <li><Link to="/shop">Rings (29)</Link></li>
-                        <li><Link to="/shop">Earrings (47)</Link></li>
-                        <li><Link to="/shop">Necklaces (68)</Link></li>
-                        <li><Link to="/shop">locket (44)</Link></li>
-                        <li><Link to="/shop">Bangle (12)</Link></li>
-                        <li><Link to="/shop">Bolo tie (48)</Link></li>
-                        <li><Link to="/shop">Brooch (64)</Link></li>
-                        <li><Link to="/shop">Body Piercing (56)</Link></li>
-                    </ul>
-                </div> */}
-            {/* </div>
-        </div> */}
+      <div className={`fz-category-menu ${isCategoryOpen ? 'open' : ''}`}>
+        <div className="row gx-4 gy-4"> 
+      
+          {categoryChunks.map((chunk, chunkIndex) => (
+            <div key={chunkIndex} className="col-lg-4 col-md-6 col-sm-6 col-12">
+              <ul className="fz-category-list">
+                {chunk.map((category, index) => (
+                  <li key={index}>
+                    <Link to={`/shop/${category.slug}`}>{category.category_name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default HeaderCategoryArea
+export default HeaderCategoryArea;

@@ -2,13 +2,15 @@ import React from 'react'
 import SearchFilter from './SearchFilter'
 import ProductCategoryList from './ProductCategoryList'
 import ProductPriceFilter from './ProductPriceFilter'
-import ProductTag from './ProductTag'
+ 
 import ProductViewFilter from './ProductViewFilter'
-import ProductContainer from './ProductContainer'
+ 
 import ProductPagination from './ProductPagination'
 
 const ShopAreaSection = () => {
   return (
+    <div className='bg-gry-1'>
+'
     <div className="shop-area">
         <div className="container">
             <div className="row gy-5 justify-content-center">
@@ -19,20 +21,20 @@ const ShopAreaSection = () => {
                         <ProductCategoryList/>
 
                         <ProductPriceFilter/>
-
-                        <ProductTag/>
+ 
                     </div>
                 </div>
 
                 <div className="col-xl-9 col-lg-8 order-0 order-lg-1">
                     <ProductViewFilter/>
 
-                    <ProductContainer/>
+                  
 
                     <ProductPagination/>
                 </div>
             </div>
         </div>
+    </div>
     </div>
   )
 }

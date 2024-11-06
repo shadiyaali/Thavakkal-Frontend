@@ -724,7 +724,7 @@
     }
 
     .fz-header-right-actions a {
-        color: $black;
+        color: $black;        
     }
 }
 
@@ -2372,3 +2372,14 @@ a.fz-hamburger {
 }
 
 .logo-top img{ width: 130px; }
+
+.fz-header-right-actions a {
+    font-size: 14px !important;
+    color: #ffffff;
+  }
+
+  .fz-category-area .fz-category-menu {    
+    background: #fff;
+    backdrop-filter: blur(0px);
+  
+  }
